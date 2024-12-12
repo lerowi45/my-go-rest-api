@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Archive or Zip Project
-      run: zip -r api.zip ./*
+      run: zip -r go-rest-api.zip ./*
 
     - name: Transfer code to ec2
       uses: appleboy/scp-action@v0.1.4
@@ -25,7 +25,7 @@ jobs:
         username: ubuntu
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
-        source: api.zip
+        source: go-rest-api.zip
         target: /home/ubuntu/
 
     - name: Deploy Code to EC2
