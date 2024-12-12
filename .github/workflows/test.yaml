@@ -20,7 +20,7 @@ jobs:
 
     - name: Transfer code to ec2
       uses: appleboy/scp-action@v0.1.4
-      with:s
+      with:
         host: ${{ secrets.EC2_IP }}
         username: ubuntu
         key: ${{ secrets.SSH_KEY }}
