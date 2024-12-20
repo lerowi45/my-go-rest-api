@@ -1,0 +1,53 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on pushes to the main branch
+      - ft-auto-deploy
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Archive or Zip Project
+      run: zip -r go-rest-api.zip ./*
+
+    - name: Transfer code to ec2
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.EC2_ADDRESS }}
+        username: ubuntu
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        source: go-rest-api.zip
+        target: /home/ubuntu/
+
+    - name: Deploy Code to EC2
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.EC2_ADDRESS }}
+        username: ubuntu
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          mkdir -p /home/ubuntu/codes/go-rest-api
+
+          cd /home/ubuntu/codes/go-rest-api
+
+          rm -rf ./*
+
+          unzip /home/ubuntu/go-rest-api.zip -d ./
+
+          rm /home/ubuntu/go-rest-api.zip
+
+          sudo systemctl restart nginx
+
+          go build -o go-rest-api-app main.go
+
+          nohup ./go-rest-api-app > app.log 2>&1 &
