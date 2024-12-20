@@ -21,7 +21,7 @@ jobs:
     - name: Transfer code to ec2
       uses: appleboy/scp-action@v0.1.4
       with:
-        host: ${{ secrets.EC2_ADDRESS }}
+        host: ${{ secrets.EC2_IP }}
         username: ubuntu
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
@@ -31,7 +31,7 @@ jobs:
     - name: Deploy Code to EC2
       uses: appleboy/ssh-action@v1.2.0
       with:
-        host: ${{ secrets.EC2_ADDRESS }}
+        host: ${{ secrets.EC2_IP }}
         username: ubuntu
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
