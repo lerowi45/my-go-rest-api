@@ -25,7 +25,7 @@ func getCreditScore(w http.ResponseWriter, r *http.Request) {
 
 func handleRequests() {
 	http.Handle("/creditscore", http.HandlerFunc(getCreditScore))
-	log.Fatal(http.ListenAndServe(":8082", nil))
+	log.Fatal(http.ListenAndServe(":5000", nil))
 }
 
 func main() {
