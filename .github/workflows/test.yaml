@@ -15,6 +15,18 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '^1.23.4' # The Go version to download (if necessary) and use.
+    - run: go version
+
+    - name: Install dependencies
+      run: go mod tidy
+
+    - name: Build app
+      run: go build -o go-rest-api-app main.go
+
     - name: Run Trivy vulnerability scanner in fs mode
       uses: aquasecurity/trivy-action@0.28.0
       with:
@@ -22,6 +34,9 @@ jobs:
         scan-ref: '.'
         severity: 'HIGH,CRITICAL'
         exit-code: 1
+    
+    - name: Remove built app exe
+      run: rm -rf go-rest-api-app
 
     - name: Archive or Zip Project
       run: zip -r go-rest-api.zip ./*
